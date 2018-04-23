@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
+        crossorigin="anonymous">
+    <title>Document</title>
+</head>
+
+<body>
+    <h2>List users</h2>
+
+    <form>
+        <div class="form-group">
+            <label for="name" class='font-weight-bold'>Name:</label>
+            <input type="text" class="form-control" name="nameUser">
+        </div>
+        <div class="form-group">
+            <label for="age" class='font-weight-bold'>Age:</label>
+            <input type="text" class="form-control" name="ageUser">
+        </div>
+        <div class='form-group'>
+            <button class="btn btn-success btn-sm">Save</button>
+            <button class="btn btn-danger btn-sm">Reset</button>
+        </div>
+    </form>
+
+    <p>
+        <table class='table table-sm table-bordered'>
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Age</th>
+                    <th>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </p>
+
+    <script>
+        const downloadUsers = () => {
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', 'api/users');
+            xhr.send();
+
+            xhr.onload = function () {
+                if (this.status === 200) {
+                    const table = document.querySelector('table tbody');
+                    const data = JSON.parse(this.response);
+                    let tr = '';
+                    data.forEach((item) => {
+                        let tri = '<tr>';
+                        let template = ``;
+                        for (const key in item) {
+                            template += `<td>${item[key]}</td>`;
+                        }
+                        template += `<td><a href='#'>delete</a> / <a href='#'>edit</a></td>`;
+                        tri += template + '</tr>';
+                        tr += tri;
+                    });
+                    table.innerHTML = tr;
+                } else {
+                    console.log(this.response);
+                }
+            }
+        }
+
+        const addUsers = function (event) {
+            event.preventDefault();
+
+            const data = {
+                name: this.elements['nameUser'].value,
+                age: this.elements['ageUser'].value
+            }
+
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '/api/users');
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify(data));
+
+            xhr.onload = function () {
+                if (this.status === 200) {
+                    downloadUsers();
+                } else {
+                    console.log(this.response);
+                }
+            }
+        }
+
+        document.forms[0].addEventListener('submit', addUsers);
+
+        downloadUsers();
+    </script>
+
+</body>
+
+</html>
