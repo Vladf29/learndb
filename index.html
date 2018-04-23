@@ -45,58 +45,7 @@
     </p>
 
     <script>
-        const downloadUsers = () => {
-            const xhr = new XMLHttpRequest();
-            xhr.open('GET', 'api/users');
-            xhr.send();
-
-            xhr.onload = function () {
-                if (this.status === 200) {
-                    const table = document.querySelector('table tbody');
-                    const data = JSON.parse(this.response);
-                    let tr = '';
-                    data.forEach((item) => {
-                        let tri = '<tr>';
-                        let template = ``;
-                        for (const key in item) {
-                            template += `<td>${item[key]}</td>`;
-                        }
-                        template += `<td><a href='#'>delete</a> / <a href='#'>edit</a></td>`;
-                        tri += template + '</tr>';
-                        tr += tri;
-                    });
-                    table.innerHTML = tr;
-                } else {
-                    console.log(this.response);
-                }
-            }
-        }
-
-        const addUsers = function (event) {
-            event.preventDefault();
-
-            const data = {
-                name: this.elements['nameUser'].value,
-                age: this.elements['ageUser'].value
-            }
-
-            const xhr = new XMLHttpRequest();
-            xhr.open('POST', '/api/users');
-            xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.send(JSON.stringify(data));
-
-            xhr.onload = function () {
-                if (this.status === 200) {
-                    downloadUsers();
-                } else {
-                    console.log(this.response);
-                }
-            }
-        }
-
-        document.forms[0].addEventListener('submit', addUsers);
-
-        downloadUsers();
+       
     </script>
 
 </body>

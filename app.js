@@ -54,5 +54,27 @@ app.route('/api/users')
         });
 
     })
+    .delete((req, res) => {
+        if (!req.body) return res.status(400).send();
+
+        const user = {}
+        user.name = req.body.name;
+        user.age = req.body.age;
+
+        MongoClient.connect(urldb, (err, client) => {
+            if (err) return res.status(400).send();
+
+            const db = client.db('usersdb');
+            const collection = db.collection('users');
+
+            collection.findOneAndDelete(user, (err, result) => {
+                if (err) return res.status(400).send();
+
+                res.send(result);
+                client.close();
+            });
+        });
+    })
+
 
 app.listen(3000);
